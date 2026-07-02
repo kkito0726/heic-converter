@@ -10,10 +10,10 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"heic-converter/internal/infra/decoder"
-	"heic-converter/internal/infra/encoder"
-	"heic-converter/internal/infra/storage"
-	"heic-converter/internal/usecase"
+	"github.com/kkito0726/heic-converter/internal/infra/decoder"
+	"github.com/kkito0726/heic-converter/internal/infra/encoder"
+	"github.com/kkito0726/heic-converter/internal/infra/storage"
+	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
 const fixtureHEIC = "../../infra/decoder/testdata/sample.heic"

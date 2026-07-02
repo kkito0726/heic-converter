@@ -14,8 +14,8 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"heic-converter/internal/domain/model"
-	"heic-converter/internal/domain/port"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 // ErrNoSourceFiles is returned when the given path contains nothing the

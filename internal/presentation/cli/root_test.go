@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"heic-converter/internal/domain/model"
-	"heic-converter/internal/usecase"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
 func TestBuildInput(t *testing.T) {

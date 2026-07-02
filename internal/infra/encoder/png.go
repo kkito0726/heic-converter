@@ -5,7 +5,7 @@ import (
 	"image/png"
 	"io"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 // PNG encodes images as PNG using the standard library.

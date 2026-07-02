@@ -7,7 +7,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 func TestRunModelProgress(t *testing.T) {

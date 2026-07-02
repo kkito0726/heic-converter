@@ -8,8 +8,8 @@ import (
 
 	"github.com/charmbracelet/huh"
 
-	"heic-converter/internal/domain/model"
-	"heic-converter/internal/usecase"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
 // runInteractive completes the conversion input by asking the user for

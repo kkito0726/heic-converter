@@ -15,8 +15,8 @@ import (
 	_ "golang.org/x/image/bmp"
 	_ "golang.org/x/image/tiff"
 
-	"heic-converter/internal/domain/model"
-	"heic-converter/internal/domain/port"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 func testImage() image.Image {

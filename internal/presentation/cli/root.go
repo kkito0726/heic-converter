@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cobra"
 	"golang.org/x/term"
 
-	"heic-converter/internal/domain/model"
-	"heic-converter/internal/usecase"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
 // isTerminal reports whether we can run interactive prompts and the rich

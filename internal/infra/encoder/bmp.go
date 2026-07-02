@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/image/bmp"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 // BMP encodes images as BMP.

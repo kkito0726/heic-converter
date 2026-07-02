@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/image/tiff"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 // TIFF encodes images as TIFF with deflate compression.

@@ -6,7 +6,7 @@ import (
 	"image/jpeg"
 	"io"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 // JPEG encodes images as JPEG using the standard library.

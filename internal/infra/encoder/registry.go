@@ -1,6 +1,6 @@
 package encoder
 
-import "heic-converter/internal/domain/port"
+import "github.com/kkito0726/heic-converter/internal/domain/port"
 
 // All returns every available encoder implementation.
 func All() []port.ImageEncoder {

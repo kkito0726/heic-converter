@@ -5,7 +5,7 @@ import (
 	"image/gif"
 	"io"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 // GIF encodes images as GIF using the standard library. Colors are reduced

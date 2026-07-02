@@ -6,7 +6,7 @@ import (
 
 	"github.com/gen2brain/webp"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 // WebP encodes images as WebP. Like the HEIC decoder, the underlying library

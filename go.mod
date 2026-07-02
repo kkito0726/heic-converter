@@ -1,4 +1,4 @@
-module heic-converter
+module github.com/kkito0726/heic-converter
 
 go 1.26.4
 

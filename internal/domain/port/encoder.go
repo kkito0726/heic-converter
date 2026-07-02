@@ -4,7 +4,7 @@ import (
 	"image"
 	"io"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 // ImageEncoder writes pixel data out in a single target format.

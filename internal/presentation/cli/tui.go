@@ -12,8 +12,8 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 
-	"heic-converter/internal/domain/model"
-	"heic-converter/internal/usecase"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
 // ErrCanceled is returned when the user aborts a running conversion.

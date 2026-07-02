@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 // textProgress is a plain-text ProgressObserver used in non-interactive runs.

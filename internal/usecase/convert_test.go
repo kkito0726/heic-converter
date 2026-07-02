@@ -13,8 +13,8 @@ import (
 	"sync"
 	"testing"
 
-	"heic-converter/internal/domain/model"
-	"heic-converter/internal/domain/port"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 // --- fakes ---------------------------------------------------------------

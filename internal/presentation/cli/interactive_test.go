@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
 func mustFormats(t *testing.T, names ...string) []model.Format {
