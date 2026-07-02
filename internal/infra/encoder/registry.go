@@ -7,5 +7,9 @@ func All() []port.ImageEncoder {
 	return []port.ImageEncoder{
 		NewJPEG(),
 		NewPNG(),
+		NewWebP(),
+		NewTIFF(),
+		NewBMP(),
+		NewGIF(),
 	}
 }

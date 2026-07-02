@@ -7,8 +7,13 @@ import (
 	"io"
 	"testing"
 
+	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
+
+	"github.com/gen2brain/webp"
+	_ "golang.org/x/image/bmp"
+	_ "golang.org/x/image/tiff"
 
 	"heic-converter/internal/domain/model"
 	"heic-converter/internal/domain/port"
@@ -62,6 +67,51 @@ func TestPNGEncoder(t *testing.T) {
 	roundTrip(t, enc, "png")
 }
 
+func TestTIFFEncoder(t *testing.T) {
+	enc := NewTIFF()
+	if enc.Format() != model.FormatTIFF {
+		t.Errorf("Format() = %v, want %v", enc.Format(), model.FormatTIFF)
+	}
+	roundTrip(t, enc, "tiff")
+}
+
+func TestBMPEncoder(t *testing.T) {
+	enc := NewBMP()
+	if enc.Format() != model.FormatBMP {
+		t.Errorf("Format() = %v, want %v", enc.Format(), model.FormatBMP)
+	}
+	roundTrip(t, enc, "bmp")
+}
+
+func TestGIFEncoder(t *testing.T) {
+	enc := NewGIF()
+	if enc.Format() != model.FormatGIF {
+		t.Errorf("Format() = %v, want %v", enc.Format(), model.FormatGIF)
+	}
+	roundTrip(t, enc, "gif")
+}
+
+// WebP output is decoded with the webp package itself because the standard
+// library has no webp support.
+func TestWebPEncoder(t *testing.T) {
+	enc := NewWebP()
+	if enc.Format() != model.FormatWebP {
+		t.Errorf("Format() = %v, want %v", enc.Format(), model.FormatWebP)
+	}
+	var buf bytes.Buffer
+	src := testImage()
+	if err := enc.Encode(&buf, src, model.NewEncodeOptions(model.DefaultQuality)); err != nil {
+		t.Fatalf("Encode() error: %v", err)
+	}
+	decoded, err := webp.Decode(bytes.NewReader(buf.Bytes()))
+	if err != nil {
+		t.Fatalf("decoding webp output: %v", err)
+	}
+	if decoded.Bounds() != src.Bounds() {
+		t.Errorf("decoded bounds = %v, want %v", decoded.Bounds(), src.Bounds())
+	}
+}
+
 func TestAllContainsUniqueFormats(t *testing.T) {
 	seen := map[model.Format]bool{}
 	for _, enc := range All() {
@@ -71,8 +121,10 @@ func TestAllContainsUniqueFormats(t *testing.T) {
 		}
 		seen[f] = true
 	}
-	if !seen[model.FormatJPEG] || !seen[model.FormatPNG] {
-		t.Errorf("All() is missing core encoders: %v", seen)
+	for _, f := range model.AllFormats() {
+		if !seen[f] {
+			t.Errorf("All() is missing an encoder for %v", f)
+		}
 	}
 }
 
