@@ -19,6 +19,10 @@ import (
 // ErrCanceled is returned when the user aborts a running conversion.
 var ErrCanceled = errors.New("conversion canceled")
 
+// extraProgramOptions lets tests run the progress UI headless
+// (no renderer, no TTY input).
+var extraProgramOptions []tea.ProgramOption
+
 type startedMsg struct{ total int }
 
 type fileDoneMsg struct {
@@ -140,7 +144,8 @@ func runWithTUI(ctx context.Context, conv *usecase.Converter, in usecase.Convert
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	p := tea.NewProgram(newRunModel(cancel), tea.WithOutput(out))
+	opts := append([]tea.ProgramOption{tea.WithOutput(out)}, extraProgramOptions...)
+	p := tea.NewProgram(newRunModel(cancel), opts...)
 	go func() {
 		results, err := conv.Convert(ctx, in, &teaObserver{p: p})
 		p.Send(finishedMsg{results: results, err: err})
