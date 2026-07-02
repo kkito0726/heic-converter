@@ -5,12 +5,20 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"golang.org/x/term"
 
 	"heic-converter/internal/domain/model"
 	"heic-converter/internal/usecase"
 )
+
+// isTerminal reports whether we can run interactive prompts and the rich
+// progress UI. Overridable in tests.
+var isTerminal = func() bool {
+	return term.IsTerminal(int(os.Stdin.Fd())) && term.IsTerminal(int(os.Stdout.Fd()))
+}
 
 type options struct {
 	formats   []string
@@ -69,6 +77,19 @@ func buildInput(path string, opts *options) (usecase.ConvertInput, error) {
 }
 
 func run(cmd *cobra.Command, path string, opts *options, conv *usecase.Converter) error {
+	if !isTerminal() {
+		return runPlain(cmd, path, opts, conv)
+	}
+	printLogo(cmd.OutOrStdout())
+	in, err := runInteractive(conv, path, opts)
+	if err != nil {
+		return err
+	}
+	return runWithTUI(cmd.Context(), conv, in, cmd.OutOrStdout())
+}
+
+// runPlain handles non-TTY runs (pipes, CI): flags only, plain-text output.
+func runPlain(cmd *cobra.Command, path string, opts *options, conv *usecase.Converter) error {
 	in, err := buildInput(path, opts)
 	if err != nil {
 		return err
