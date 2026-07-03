@@ -1,7 +1,7 @@
-# シーケンス図
+# 処理シーケンス図(CLI)
 
-heic-converterの処理フローをMermaidのシーケンス図で示す。実装は
-[doc/prd/IMPLEMENTATION.md](prd/IMPLEMENTATION.md)のクリーンアーキテクチャ構成
+heic-converter CLIの処理フローをMermaidのシーケンス図で示す。実装は
+[実装方針](./implementation-plan.md)のクリーンアーキテクチャ構成
 (`cmd` → `presentation/cli` → `usecase` → `domain/port` ← `infra`)に対応する。
 
 ## 1. 起動〜モード分岐
