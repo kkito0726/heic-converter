@@ -2,7 +2,7 @@ package encoder
 
 import "github.com/kkito0726/heic-converter/internal/domain/port"
 
-// All returns every available encoder implementation.
+// Allは利用可能なエンコーダ実装をすべて返す。
 func All() []port.ImageEncoder {
 	return []port.ImageEncoder{
 		NewJPEG(),

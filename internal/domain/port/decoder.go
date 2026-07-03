@@ -5,12 +5,12 @@ import (
 	"io"
 )
 
-// ImageDecoder turns an encoded source image (e.g. HEIC) into pixel data.
-// Implementations live in the infra layer so the decoding library can be
-// swapped without touching domain or usecase code.
+// ImageDecoderはエンコード済みの元画像(HEICなど)をピクセルデータに変換する。
+// 実装はinfra層に置き、domain層・usecase層に触れずにデコードライブラリを
+// 差し替えられるようにする。
 type ImageDecoder interface {
 	Decode(r io.Reader) (image.Image, error)
-	// CanDecode reports whether the file at path looks decodable by this
-	// decoder (typically judged by file extension).
+	// CanDecodeはpathのファイルがこのデコーダでデコード可能そうかどうかを
+	// 返す(通常は拡張子で判定する)。
 	CanDecode(path string) bool
 }

@@ -12,8 +12,8 @@ import (
 	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
-// runInteractive completes the conversion input by asking the user for
-// whatever the flags did not provide.
+// runInteractiveはフラグで指定されなかった項目をユーザーに尋ねることで
+// 変換の入力を完成させる。
 func runInteractive(conv *usecase.Converter, path string, opts *options) (usecase.ConvertInput, error) {
 	path, isDir, err := askPath(path)
 	if err != nil {
@@ -36,8 +36,8 @@ func runInteractive(conv *usecase.Converter, path string, opts *options) (usecas
 	}, nil
 }
 
-// askPath prompts for the source path unless it was given as an argument,
-// and reports whether it is a directory.
+// askPathは引数で与えられていなければ変換元パスを尋ね、
+// それがディレクトリかどうかを返す。
 func askPath(path string) (string, bool, error) {
 	if strings.TrimSpace(path) == "" {
 		input := huh.NewInput().
@@ -69,7 +69,7 @@ func validatePath(s string) error {
 	return nil
 }
 
-// askFormats shows a multi-select of output formats unless --format was given.
+// askFormatsは--formatが指定されていなければ出力形式の複数選択UIを表示する。
 func askFormats(conv *usecase.Converter, preset []string) ([]model.Format, error) {
 	if len(preset) > 0 {
 		return model.ParseFormats(preset)
@@ -97,7 +97,7 @@ func askFormats(conv *usecase.Converter, preset []string) ([]model.Format, error
 	return selected, nil
 }
 
-// askOptions prompts for options that are still at their zero value.
+// askOptionsはゼロ値のままになっているオプションを尋ねる。
 func askOptions(isDir bool, opts *options) error {
 	var fields []huh.Field
 	if isDir && !opts.recursive {

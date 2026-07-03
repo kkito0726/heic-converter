@@ -9,20 +9,20 @@ import (
 	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
-// GIF encodes images as GIF using the standard library. Colors are reduced
-// to a 256-color palette as required by the format.
+// GIFは標準ライブラリを使って画像をGIF形式でエンコードする。
+// 形式の仕様上、色は256色パレットに減色される。
 type GIF struct{}
 
 var _ port.ImageEncoder = (*GIF)(nil)
 
-// NewGIF returns a GIF encoder.
+// NewGIFはGIFエンコーダを返す。
 func NewGIF() *GIF { return &GIF{} }
 
-// Format implements port.ImageEncoder.
+// Formatはport.ImageEncoderを実装する。
 func (e *GIF) Format() model.Format { return model.FormatGIF }
 
-// Encode implements port.ImageEncoder. GIF palette quantization ignores
-// opts.Quality.
+// Encodeはport.ImageEncoderを実装する。GIFのパレット量子化では
+// opts.Qualityは無視される。
 func (e *GIF) Encode(w io.Writer, img image.Image, _ model.EncodeOptions) error {
 	return gif.Encode(w, img, &gif.Options{NumColors: 256})
 }

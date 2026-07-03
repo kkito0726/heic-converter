@@ -16,11 +16,11 @@ import (
 	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
-// ErrCanceled is returned when the user aborts a running conversion.
+// ErrCanceledは実行中の変換をユーザーが中断したときに返される。
 var ErrCanceled = errors.New("conversion canceled")
 
-// extraProgramOptions lets tests run the progress UI headless
-// (no renderer, no TTY input).
+// extraProgramOptionsは進捗UIをヘッドレスで(レンダラーなし・TTY入力なしで)
+// テストできるようにするためのもの。
 var extraProgramOptions []tea.ProgramOption
 
 type startedMsg struct{ total int }
@@ -35,7 +35,7 @@ type finishedMsg struct {
 	err     error
 }
 
-// teaObserver bridges usecase progress callbacks into bubbletea messages.
+// teaObserverはusecaseの進捗コールバックをbubbletea用のメッセージに橋渡しする。
 type teaObserver struct{ p *tea.Program }
 
 var _ usecase.ProgressObserver = (*teaObserver)(nil)
@@ -45,8 +45,8 @@ func (o *teaObserver) OnFileDone(res model.ConversionResult, done, total int) {
 	o.p.Send(fileDoneMsg{res: res, done: done, total: total})
 }
 
-// maxVisibleResults limits how many per-file lines stay on screen while
-// converting; the full summary is printed at the end.
+// maxVisibleResultsは変換中に画面上に残すファイルごとの行数を制限する。
+// 完全なサマリは最後にまとめて出力される。
 const maxVisibleResults = 8
 
 type runModel struct {
@@ -143,7 +143,7 @@ func resultLine(res model.ConversionResult) string {
 	return fmt.Sprintf("%s %s", styleError.Render("✗"), name)
 }
 
-// runWithTUI executes the conversion while rendering a live progress screen.
+// runWithTUIはライブの進捗画面を描画しながら変換を実行する。
 func runWithTUI(ctx context.Context, conv *usecase.Converter, in usecase.ConvertInput, out io.Writer) error {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -169,8 +169,8 @@ func runWithTUI(ctx context.Context, conv *usecase.Converter, in usecase.Convert
 	return printStyledSummary(out, m.results)
 }
 
-// printStyledSummary prints the final report and returns an error when any
-// file failed, so the process exits non-zero.
+// printStyledSummaryは最終レポートを出力し、1件でも失敗していればエラーを
+// 返す。これによりプロセスは非ゼロで終了する。
 func printStyledSummary(w io.Writer, results []model.ConversionResult) error {
 	var failed []model.ConversionResult
 	for _, r := range results {

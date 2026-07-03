@@ -29,7 +29,7 @@ var logoLines = []string{
 	"╚═╝  ╚═╝╚══════╝╚═╝ ╚═════╝ CONVERTER",
 }
 
-// logoGradient colors the logo line by line from purple to pink.
+// logoGradientはロゴを1行ずつ紫からピンクへ着色する。
 var logoGradient = []string{
 	"#7D56F4", "#945CF5", "#AB62F6", "#C267F7", "#D86BF8", "#EE6FF8",
 }

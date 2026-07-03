@@ -17,10 +17,10 @@ import (
 	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
-// --- fakes ---------------------------------------------------------------
+// --- フェイク -------------------------------------------------------------
 
 type fakeDecoder struct {
-	failOn map[string]bool // source basenames that fail to decode
+	failOn map[string]bool // デコードに失敗させる変換元ファイル名
 }
 
 func (d *fakeDecoder) Decode(r io.Reader) (image.Image, error) {
@@ -54,11 +54,11 @@ func (e *fakeEncoder) Encode(w io.Writer, _ image.Image, _ model.EncodeOptions) 
 	return err
 }
 
-// fakeStorage is an in-memory FileStorage. files maps path -> content.
+// fakeStorageはインメモリのFileStorage。filesはpath -> contentのマップ。
 type fakeStorage struct {
 	mu    sync.Mutex
 	files map[string]string
-	dirs  map[string][]string // dir path -> contained file paths
+	dirs  map[string][]string // dirパス -> 配下のファイルパス一覧
 }
 
 func newFakeStorage() *fakeStorage {
@@ -113,7 +113,7 @@ func (s *fakeStorage) Create(path string, overwrite bool) (io.WriteCloser, error
 	}}, nil
 }
 
-// recordingObserver captures progress callbacks.
+// recordingObserverは進捗コールバックを記録する。
 type recordingObserver struct {
 	total int
 	dones []int
@@ -124,7 +124,7 @@ func (o *recordingObserver) OnFileDone(_ model.ConversionResult, done, _ int) {
 	o.dones = append(o.dones, done)
 }
 
-// --- helpers ---------------------------------------------------------------
+// --- ヘルパー -------------------------------------------------------------
 
 func newTestConverter(st *fakeStorage, encoders ...port.ImageEncoder) *Converter {
 	if len(encoders) == 0 {
@@ -136,7 +136,7 @@ func newTestConverter(st *fakeStorage, encoders ...port.ImageEncoder) *Converter
 	return NewConverter(&fakeDecoder{}, encoders, st)
 }
 
-// --- tests -----------------------------------------------------------------
+// --- テスト -----------------------------------------------------------------
 
 func TestConvertSingleFileMultipleFormats(t *testing.T) {
 	st := newFakeStorage()
@@ -258,7 +258,7 @@ func TestConvertNoSources(t *testing.T) {
 func TestConvertUnknownEncoder(t *testing.T) {
 	st := newFakeStorage()
 	st.addFile("/pics/a.heic", "a")
-	c := newTestConverter(st) // only jpg/png encoders registered
+	c := newTestConverter(st) // jpg/pngのエンコーダしか登録されていない
 
 	_, err := c.Convert(context.Background(), ConvertInput{
 		Path:    "/pics/a.heic",

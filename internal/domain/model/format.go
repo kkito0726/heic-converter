@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Format is an output image format supported by the converter.
+// Formatはコンバータが対応する出力画像形式を表す。
 type Format string
 
 const (
@@ -17,7 +17,7 @@ const (
 	FormatGIF  Format = "gif"
 )
 
-// AllFormats returns every supported output format in display order.
+// AllFormatsは表示順に、対応するすべての出力形式を返す。
 func AllFormats() []Format {
 	return []Format{FormatJPEG, FormatPNG, FormatWebP, FormatTIFF, FormatBMP, FormatGIF}
 }
@@ -33,8 +33,8 @@ var formatAliases = map[string]Format{
 	"gif":  FormatGIF,
 }
 
-// ParseFormat converts a user-supplied string such as "jpg", "JPEG" or ".png"
-// into a Format.
+// ParseFormatは"jpg"、"JPEG"、".png"のようなユーザー入力文字列を
+// Formatに変換する。
 func ParseFormat(s string) (Format, error) {
 	key := strings.ToLower(strings.TrimPrefix(strings.TrimSpace(s), "."))
 	f, ok := formatAliases[key]
@@ -44,8 +44,8 @@ func ParseFormat(s string) (Format, error) {
 	return f, nil
 }
 
-// ParseFormats parses multiple format strings, deduplicating while keeping
-// the original order.
+// ParseFormatsは複数の形式文字列をパースする。元の順序を保ったまま
+// 重複は除去する。
 func ParseFormats(ss []string) ([]Format, error) {
 	seen := make(map[Format]bool, len(ss))
 	formats := make([]Format, 0, len(ss))
@@ -73,5 +73,5 @@ func supportedNames() string {
 
 func (f Format) String() string { return string(f) }
 
-// Extension returns the file extension for the format, including the leading dot.
+// Extensionは先頭のドットを含む、その形式のファイル拡張子を返す。
 func (f Format) Extension() string { return "." + string(f) }

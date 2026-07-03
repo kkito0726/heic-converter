@@ -1,5 +1,5 @@
-// Package cli is the command-line presentation layer. It depends only on
-// the usecase layer so a future API presentation can reuse the same core.
+// cliパッケージはコマンドライン向けのpresentation層。usecase層にのみ
+// 依存するため、将来API向けのpresentationを追加しても同じコアを再利用できる。
 package cli
 
 import (
@@ -14,8 +14,8 @@ import (
 	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
-// isTerminal reports whether we can run interactive prompts and the rich
-// progress UI. Overridable in tests.
+// isTerminalは対話プロンプトとリッチな進捗UIを実行できるかどうかを返す。
+// テストでは差し替え可能。
 var isTerminal = func() bool {
 	return term.IsTerminal(int(os.Stdin.Fd())) && term.IsTerminal(int(os.Stdout.Fd()))
 }
@@ -28,7 +28,7 @@ type options struct {
 	quality   int
 }
 
-// New builds the root command wired to the given converter.
+// Newは指定されたconverterを組み込んだルートコマンドを構築する。
 func New(conv *usecase.Converter) *cobra.Command {
 	opts := &options{}
 	cmd := &cobra.Command{
@@ -54,7 +54,7 @@ func New(conv *usecase.Converter) *cobra.Command {
 	return cmd
 }
 
-// buildInput validates CLI inputs and maps them onto the usecase input.
+// buildInputはCLI入力を検証し、usecaseの入力にマッピングする。
 func buildInput(path string, opts *options) (usecase.ConvertInput, error) {
 	if path == "" {
 		return usecase.ConvertInput{}, errors.New("path to a .heic file or a directory is required")
@@ -88,7 +88,8 @@ func run(cmd *cobra.Command, path string, opts *options, conv *usecase.Converter
 	return runWithTUI(cmd.Context(), conv, in, cmd.OutOrStdout())
 }
 
-// runPlain handles non-TTY runs (pipes, CI): flags only, plain-text output.
+// runPlainは非TTY実行(パイプ・CIなど)を処理する。フラグのみを使い、
+// プレーンテキストで出力する。
 func runPlain(cmd *cobra.Command, path string, opts *options, conv *usecase.Converter) error {
 	in, err := buildInput(path, opts)
 	if err != nil {
