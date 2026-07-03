@@ -13,7 +13,7 @@
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
-      "extensions": ["golang.go"]
+      "extensions": ["golang.go", "bufbuild.vscode-buf"]
     }
   }
 }
