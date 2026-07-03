@@ -9,12 +9,16 @@ import (
 	"strings"
 
 	"github.com/gen2brain/heic"
+
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 // HEIC decodes .heic/.heif files. The underlying library runs a WASM build
 // of the decoder via a pure-Go runtime, so the binary stays free of cgo and
 // external dependencies.
 type HEIC struct{}
+
+var _ port.ImageDecoder = (*HEIC)(nil)
 
 // NewHEIC returns a HEIC decoder.
 func NewHEIC() *HEIC { return &HEIC{} }

@@ -7,10 +7,13 @@ import (
 	"io"
 
 	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 // JPEG encodes images as JPEG using the standard library.
 type JPEG struct{}
+
+var _ port.ImageEncoder = (*JPEG)(nil)
 
 // NewJPEG returns a JPEG encoder.
 func NewJPEG() *JPEG { return &JPEG{} }

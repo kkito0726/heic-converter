@@ -7,11 +7,14 @@ import (
 	"github.com/gen2brain/webp"
 
 	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 // WebP encodes images as WebP. Like the HEIC decoder, the underlying library
 // runs a WASM build via a pure-Go runtime, so no cgo is involved.
 type WebP struct{}
+
+var _ port.ImageEncoder = (*WebP)(nil)
 
 // NewWebP returns a WebP encoder.
 func NewWebP() *WebP { return &WebP{} }

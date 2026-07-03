@@ -5,12 +5,15 @@ import (
 	"io"
 
 	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/usecase"
 )
 
 // textProgress is a plain-text ProgressObserver used in non-interactive runs.
 type textProgress struct {
 	out io.Writer
 }
+
+var _ usecase.ProgressObserver = (*textProgress)(nil)
 
 func newTextProgress(out io.Writer) *textProgress {
 	return &textProgress{out: out}

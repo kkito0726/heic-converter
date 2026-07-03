@@ -4,12 +4,13 @@
   "features": {
     "ghcr.io/devcontainers/features/go:1": {
       "version": "1.26.4"
-    }
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "containerEnv": {
     "CGO_ENABLED": "0"
   },
-  "postCreateCommand": "go mod download",
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": ["golang.go"]
