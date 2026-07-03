@@ -22,6 +22,20 @@ HEIC (High Efficiency Image Container) は、**HEIF** (High Efficiency Image Fil
 
 ## インストール
 
+### インストールスクリプト(推奨)
+
+macOS / Linux / Windows (Git Bash) 対応。OSとCPUアーキテクチャを自動判別して最新リリースをインストールします。
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/kkito0726/heic-converter/main/install.sh | sh
+```
+
+バージョンやインストール先は環境変数で指定できます。
+
+```sh
+VERSION=v0.1.0 BIN_DIR=~/bin curl -fsSL https://raw.githubusercontent.com/kkito0726/heic-converter/main/install.sh | sh
+```
+
 ### Goでインストール
 
 ```sh
