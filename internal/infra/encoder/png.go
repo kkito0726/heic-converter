@@ -6,10 +6,13 @@ import (
 	"io"
 
 	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 // PNG encodes images as PNG using the standard library.
 type PNG struct{}
+
+var _ port.ImageEncoder = (*PNG)(nil)
 
 // NewPNG returns a PNG encoder.
 func NewPNG() *PNG { return &PNG{} }

@@ -8,10 +8,14 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 // LocalFS implements port.FileStorage against the local filesystem.
 type LocalFS struct{}
+
+var _ port.FileStorage = (*LocalFS)(nil)
 
 // NewLocalFS returns a LocalFS storage.
 func NewLocalFS() *LocalFS { return &LocalFS{} }

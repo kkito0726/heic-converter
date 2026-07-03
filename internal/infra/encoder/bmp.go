@@ -7,10 +7,13 @@ import (
 	"golang.org/x/image/bmp"
 
 	"github.com/kkito0726/heic-converter/internal/domain/model"
+	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
 // BMP encodes images as BMP.
 type BMP struct{}
+
+var _ port.ImageEncoder = (*BMP)(nil)
 
 // NewBMP returns a BMP encoder.
 func NewBMP() *BMP { return &BMP{} }

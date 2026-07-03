@@ -38,6 +38,8 @@ type finishedMsg struct {
 // teaObserver bridges usecase progress callbacks into bubbletea messages.
 type teaObserver struct{ p *tea.Program }
 
+var _ usecase.ProgressObserver = (*teaObserver)(nil)
+
 func (o *teaObserver) OnStart(total int) { o.p.Send(startedMsg{total: total}) }
 func (o *teaObserver) OnFileDone(res model.ConversionResult, done, total int) {
 	o.p.Send(fileDoneMsg{res: res, done: done, total: total})
@@ -59,6 +61,8 @@ type runModel struct {
 	finished bool
 	cancel   context.CancelFunc
 }
+
+var _ tea.Model = runModel{}
 
 func newRunModel(cancel context.CancelFunc) runModel {
 	return runModel{

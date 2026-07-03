@@ -31,6 +31,8 @@ type ProgressObserver interface {
 
 type nopObserver struct{}
 
+var _ ProgressObserver = nopObserver{}
+
 func (nopObserver) OnStart(int)                                {}
 func (nopObserver) OnFileDone(model.ConversionResult, int, int) {}
 
