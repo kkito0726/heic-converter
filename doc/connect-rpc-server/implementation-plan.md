@@ -1,7 +1,7 @@
 # 実装方針: Webサーバーモード(connect-rpc)
 
-[PRD-SERVER.md](./PRD-SERVER.md)を実現するための技術選定・設計・実装計画。
-既存の[IMPLEMENTATION.md](./IMPLEMENTATION.md)のアーキテクチャを前提に、presentation層を追加する。
+[サーバーモードPRD](./prd.md)を実現するための技術選定・設計・実装計画。
+既存の[CLI版実装方針](../cli-converter/implementation-plan.md)のアーキテクチャを前提に、presentation層を追加する。
 
 ## 1. 技術選定
 
@@ -113,21 +113,39 @@ internal/
 
 ### 3.3 リクエストの流れ
 
-```
-client (curl / grpcurl / ブラウザ)
-  │  Connect(JSON) / gRPC / gRPC-Web
-  ▼
-http.Server + h2c ── logging interceptor
-  ▼
-api.handler.Convert(ctx, req)
-  │  formats文字列 → model.ParseFormats
-  │  quality       → model.NewEncodeOptions
-  ▼
-usecase.Converter.ConvertImage(ctx, bytes.Reader, formats, opts)
-  │  port.ImageDecoder.Decode(1回)
-  │  port.ImageEncoder.Encode(形式ごと)
-  ▼
-api.handler ── []ConvertedImage → ConvertResponse に詰め替えて返却
+```mermaid
+sequenceDiagram
+    actor Client as クライアント<br>(curl / grpcurl / ブラウザ)
+    participant Server as http.Server + h2c<br>(api/server.go)
+    participant Handler as api.handler<br>(logging interceptor経由)
+    participant Conv as usecase.Converter
+    participant Decoder as port.ImageDecoder<br>(infra/decoder.HEIC)
+    participant Encoder as port.ImageEncoder<br>(infra/encoder.*)
+
+    Client->>Server: Convert(image, formats, quality)<br>Connect(JSON) / gRPC / gRPC-Web
+    Server->>Server: プロトコル自動判別・サイズ上限チェック
+    Server->>Handler: Convert(ctx, ConvertRequest)
+    Handler->>Handler: formats → model.ParseFormats<br>quality → model.NewEncodeOptions
+
+    alt 形式名が不正・formatsが空
+        Handler-->>Client: invalid_argument
+    else 入力が妥当
+        Handler->>Conv: ConvertImage(ctx, bytes.Reader, formats, opts)
+        Conv->>Decoder: Decode(r)
+        alt デコード失敗(壊れた画像・HEIC以外)
+            Decoder-->>Conv: エラー
+            Conv-->>Handler: エラー
+            Handler-->>Client: invalid_argument
+        else デコード成功
+            Decoder-->>Conv: image.Image(1回だけデコード)
+            loop 指定された各出力形式
+                Conv->>Encoder: Encode(w, img, opts)
+                Encoder-->>Conv: 変換済みバイト列
+            end
+            Conv-->>Handler: []ConvertedImage
+            Handler-->>Client: ConvertResponse(images)
+        end
+    end
 ```
 
 ### 3.4 エラーマッピング

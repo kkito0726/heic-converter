@@ -131,4 +131,4 @@ internal/
 
 HEICのデコードには [gen2brain/heic](https://github.com/gen2brain/heic)(デコーダをWASM化しpure Goランタイムで実行)を採用しており、これが「cgoなしの単一バイナリ」を実現しています。
 
-設計の詳細は [doc/prd/PRD.md](doc/prd/PRD.md) と [doc/prd/IMPLEMENTATION.md](doc/prd/IMPLEMENTATION.md) を参照してください。
+設計の詳細は [doc/cli-converter/prd.md](doc/cli-converter/prd.md) と [doc/cli-converter/implementation-plan.md](doc/cli-converter/implementation-plan.md) を参照してください。

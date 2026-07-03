@@ -1,7 +1,7 @@
 # PRD: heic-converter Webサーバーモード
 
 CLIとして完成しているheic-converterを、Webサーバーとしても起動できるようにする。
-[PRD.md](./PRD.md)の「将来構想」に挙げていた `heic-converter serve` の具体化。
+[CLI版PRD](../cli-converter/prd.md)の「将来構想」に挙げていた `heic-converter serve` の具体化。
 
 ## 1. 背景・課題
 
