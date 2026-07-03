@@ -29,9 +29,9 @@ func testImage() image.Image {
 	return img
 }
 
-// roundTrip encodes with enc and decodes with the standard image package,
-// verifying the encoded bytes are a valid image of the expected size and
-// format.
+// roundTripはencでエンコードし、標準のimageパッケージでデコードすることで、
+// エンコードされたバイト列が期待するサイズ・形式の妥当な画像であることを
+// 検証する。
 func roundTrip(t *testing.T, enc port.ImageEncoder, wantFormat string) {
 	t.Helper()
 	var buf bytes.Buffer
@@ -91,8 +91,8 @@ func TestGIFEncoder(t *testing.T) {
 	roundTrip(t, enc, "gif")
 }
 
-// WebP output is decoded with the webp package itself because the standard
-// library has no webp support.
+// 標準ライブラリはwebpに対応していないため、WebP出力はwebpパッケージ自身で
+// デコードする。
 func TestWebPEncoder(t *testing.T) {
 	enc := NewWebP()
 	if enc.Format() != model.FormatWebP {

@@ -1,4 +1,4 @@
-// Command heic-converter converts HEIC/HEIF images to common formats.
+// heic-converterコマンドはHEIC/HEIF画像を一般的な形式に変換する。
 package main
 
 import (

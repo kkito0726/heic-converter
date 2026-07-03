@@ -2,16 +2,16 @@ package port
 
 import "io"
 
-// FileStorage abstracts file discovery and I/O so the usecase layer never
-// touches the OS filesystem directly.
+// FileStorageはファイル探索とI/Oを抽象化し、usecase層がOSのファイル
+// システムに直接触れないようにする。
 type FileStorage interface {
-	// FindFiles returns the file itself when path points at a regular file,
-	// or every file directly inside (recursively when recursive is true)
-	// when path points at a directory.
+	// FindFilesはpathが通常のファイルを指す場合はそのファイル自身を、
+	// ディレクトリを指す場合は直下(recursiveがtrueなら再帰的に配下)の
+	// ファイルすべてを返す。
 	FindFiles(path string, recursive bool) ([]string, error)
 	Open(path string) (io.ReadCloser, error)
-	// Create opens path for writing, creating parent directories as needed.
-	// When overwrite is false and the file already exists, it returns an
-	// error wrapping fs.ErrExist.
+	// Createは書き込み用にpathを開き、必要に応じて親ディレクトリを作成する。
+	// overwriteがfalseで既にファイルが存在する場合、fs.ErrExistを
+	// ラップしたエラーを返す。
 	Create(path string, overwrite bool) (io.WriteCloser, error)
 }

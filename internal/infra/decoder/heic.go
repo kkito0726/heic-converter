@@ -1,4 +1,4 @@
-// Package decoder provides ImageDecoder implementations.
+// decoderパッケージはImageDecoderの実装を提供する。
 package decoder
 
 import (
@@ -13,14 +13,14 @@ import (
 	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
-// HEIC decodes .heic/.heif files. The underlying library runs a WASM build
-// of the decoder via a pure-Go runtime, so the binary stays free of cgo and
-// external dependencies.
+// HEICは.heic/.heifファイルをデコードする。内部で使うライブラリは
+// デコーダをWASMビルドしたものをpure Goランタイムで実行するため、
+// バイナリはcgoや外部依存から解放される。
 type HEIC struct{}
 
 var _ port.ImageDecoder = (*HEIC)(nil)
 
-// NewHEIC returns a HEIC decoder.
+// NewHEICはHEICデコーダを返す。
 func NewHEIC() *HEIC { return &HEIC{} }
 
 var heicExtensions = map[string]bool{
@@ -28,7 +28,7 @@ var heicExtensions = map[string]bool{
 	".heif": true,
 }
 
-// Decode implements port.ImageDecoder.
+// Decodeはport.ImageDecoderを実装する。
 func (d *HEIC) Decode(r io.Reader) (image.Image, error) {
 	img, err := heic.Decode(r)
 	if err != nil {
@@ -37,8 +37,8 @@ func (d *HEIC) Decode(r io.Reader) (image.Image, error) {
 	return img, nil
 }
 
-// CanDecode implements port.ImageDecoder. It judges by file extension,
-// case-insensitively.
+// CanDecodeはport.ImageDecoderを実装する。大文字小文字を区別せず、
+// 拡張子で判定する。
 func (d *HEIC) CanDecode(path string) bool {
 	return heicExtensions[strings.ToLower(filepath.Ext(path))]
 }

@@ -24,7 +24,7 @@ func TestHEICDecode(t *testing.T) {
 }
 
 func TestHEICDecodeInvalidData(t *testing.T) {
-	f, err := os.Open("heic.go") // not an image
+	f, err := os.Open("heic.go") // 画像ではないファイル
 	if err != nil {
 		t.Fatal(err)
 	}

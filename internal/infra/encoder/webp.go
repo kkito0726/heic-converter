@@ -10,19 +10,19 @@ import (
 	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
-// WebP encodes images as WebP. Like the HEIC decoder, the underlying library
-// runs a WASM build via a pure-Go runtime, so no cgo is involved.
+// WebPは画像をWebP形式でエンコードする。HEICデコーダと同様、内部で使う
+// ライブラリはWASMビルドをpure Goランタイムで実行するため、cgoは不要。
 type WebP struct{}
 
 var _ port.ImageEncoder = (*WebP)(nil)
 
-// NewWebP returns a WebP encoder.
+// NewWebPはWebPエンコーダを返す。
 func NewWebP() *WebP { return &WebP{} }
 
-// Format implements port.ImageEncoder.
+// Formatはport.ImageEncoderを実装する。
 func (e *WebP) Format() model.Format { return model.FormatWebP }
 
-// Encode implements port.ImageEncoder.
+// Encodeはport.ImageEncoderを実装する。
 func (e *WebP) Encode(w io.Writer, img image.Image, opts model.EncodeOptions) error {
 	return webp.Encode(w, img, webp.Options{Quality: opts.Quality})
 }

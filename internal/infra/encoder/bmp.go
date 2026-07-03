@@ -10,19 +10,19 @@ import (
 	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
-// BMP encodes images as BMP.
+// BMPは画像をBMP形式でエンコードする。
 type BMP struct{}
 
 var _ port.ImageEncoder = (*BMP)(nil)
 
-// NewBMP returns a BMP encoder.
+// NewBMPはBMPエンコーダを返す。
 func NewBMP() *BMP { return &BMP{} }
 
-// Format implements port.ImageEncoder.
+// Formatはport.ImageEncoderを実装する。
 func (e *BMP) Format() model.Format { return model.FormatBMP }
 
-// Encode implements port.ImageEncoder. BMP is uncompressed, so opts.Quality
-// is ignored.
+// Encodeはport.ImageEncoderを実装する。BMPは無圧縮なのでopts.Qualityは
+// 無視される。
 func (e *BMP) Encode(w io.Writer, img image.Image, _ model.EncodeOptions) error {
 	return bmp.Encode(w, img)
 }

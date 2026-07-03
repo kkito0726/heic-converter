@@ -7,9 +7,9 @@ import (
 	"github.com/kkito0726/heic-converter/internal/domain/model"
 )
 
-// ImageEncoder writes pixel data out in a single target format.
+// ImageEncoderはピクセルデータを単一の出力形式で書き出す。
 type ImageEncoder interface {
 	Encode(w io.Writer, img image.Image, opts model.EncodeOptions) error
-	// Format identifies which output format this encoder produces.
+	// Formatはこのエンコーダがどの出力形式を生成するかを返す。
 	Format() model.Format
 }

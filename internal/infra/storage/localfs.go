@@ -1,4 +1,4 @@
-// Package storage provides FileStorage implementations.
+// storageパッケージはFileStorageの実装を提供する。
 package storage
 
 import (
@@ -12,15 +12,15 @@ import (
 	"github.com/kkito0726/heic-converter/internal/domain/port"
 )
 
-// LocalFS implements port.FileStorage against the local filesystem.
+// LocalFSはローカルファイルシステムに対してport.FileStorageを実装する。
 type LocalFS struct{}
 
 var _ port.FileStorage = (*LocalFS)(nil)
 
-// NewLocalFS returns a LocalFS storage.
+// NewLocalFSはLocalFSストレージを返す。
 func NewLocalFS() *LocalFS { return &LocalFS{} }
 
-// FindFiles implements port.FileStorage.
+// FindFilesはport.FileStorageを実装する。
 func (s *LocalFS) FindFiles(path string, recursive bool) ([]string, error) {
 	info, err := os.Stat(path)
 	if err != nil {
@@ -64,13 +64,13 @@ func listDir(dir string, recursive bool) ([]string, error) {
 	return files, err
 }
 
-// Open implements port.FileStorage.
+// Openはport.FileStorageを実装する。
 func (s *LocalFS) Open(path string) (io.ReadCloser, error) {
 	return os.Open(path)
 }
 
-// Create implements port.FileStorage. When overwrite is false and the file
-// already exists, the returned error wraps fs.ErrExist.
+// Createはport.FileStorageを実装する。overwriteがfalseで既にファイルが
+// 存在する場合、返すエラーはfs.ErrExistをラップする。
 func (s *LocalFS) Create(path string, overwrite bool) (io.WriteCloser, error) {
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return nil, fmt.Errorf("create output directory: %w", err)

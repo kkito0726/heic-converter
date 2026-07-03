@@ -16,8 +16,8 @@ func mustFormats(t *testing.T, names ...string) []model.Format {
 	return formats
 }
 
-// When path and all options are provided up front, the interactive flow must
-// not prompt at all and just assemble the input.
+// パスと全オプションが事前にすべて与えられている場合、対話フローは一切
+// 何も尋ねず入力を組み立てるだけになるはず。
 func TestRunInteractiveWithEverythingProvided(t *testing.T) {
 	dir := t.TempDir()
 	src := filepath.Join(dir, "a.heic")
