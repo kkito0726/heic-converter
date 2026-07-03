@@ -51,6 +51,7 @@ func New(conv *usecase.Converter) *cobra.Command {
 	f.BoolVarP(&opts.recursive, "recursive", "r", false, "process directories recursively")
 	f.BoolVar(&opts.overwrite, "overwrite", false, "overwrite existing output files")
 	f.IntVarP(&opts.quality, "quality", "q", model.DefaultQuality, "encode quality 1-100 (jpg/webp)")
+	cmd.AddCommand(newServeCmd(conv))
 	return cmd
 }
 

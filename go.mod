@@ -3,6 +3,9 @@ module github.com/kkito0726/heic-converter
 go 1.26.4
 
 require (
+	connectrpc.com/connect v1.20.0
+	connectrpc.com/grpchealth v1.5.0
+	connectrpc.com/grpcreflect v1.3.0
 	github.com/charmbracelet/bubbles v1.0.0
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/huh v1.0.0
@@ -11,14 +14,13 @@ require (
 	github.com/gen2brain/webp v0.6.4
 	github.com/spf13/cobra v1.10.2
 	golang.org/x/image v0.43.0
+	golang.org/x/net v0.56.0
 	golang.org/x/sync v0.21.0
 	golang.org/x/term v0.44.0
+	google.golang.org/protobuf v1.36.11
 )
 
 require (
-	connectrpc.com/connect v1.20.0 // indirect
-	connectrpc.com/grpchealth v1.5.0 // indirect
-	connectrpc.com/grpcreflect v1.3.0 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/catppuccin/go v0.3.0 // indirect
@@ -47,8 +49,6 @@ require (
 	github.com/spf13/pflag v1.0.9 // indirect
 	github.com/tetratelabs/wazero v1.12.0 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
-	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
 	golang.org/x/text v0.38.0 // indirect
-	google.golang.org/protobuf v1.36.11 // indirect
 )
