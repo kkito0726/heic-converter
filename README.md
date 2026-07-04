@@ -167,7 +167,7 @@ docker compose up --build
 起動後 http://localhost:3000 を開くとWeb UIが使えます。
 
 - `web`(nginx)が静的ファイルを配信し、RPCパスを `api` コンテナへリバースプロキシします(同一オリジンのためCORS不要)
-- APIを直接叩きたい場合は http://localhost:8080 も公開されています(grpcurl等)
+- `api` はホストへポート公開していません(RPCも http://localhost:3000 に対して叩けます)
 - 変換画像はどのコンテナにも保存されません(ステートレス)
 
 ## 開発
