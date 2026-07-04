@@ -39,14 +39,14 @@ VERSION=v0.1.0 BIN_DIR=~/bin curl -fsSL https://raw.githubusercontent.com/kkito0
 ### Goでインストール
 
 ```sh
-go install github.com/kkito0726/heic-converter/cmd/heic-converter@latest
+go install github.com/kkito0726/heic-converter/backend/cmd/heic-converter@latest
 ```
 
 ### ソースからビルド
 
 ```sh
 git clone https://github.com/kkito0726/heic-converter.git
-cd heic-converter
+cd heic-converter/backend
 CGO_ENABLED=0 go build -o heic-converter ./cmd/heic-converter
 ```
 
@@ -175,15 +175,16 @@ docker compose up --build
 開発環境は [devcontainer](.devcontainer/devcontainer.json) で再現できます(Go 1.26.4 / Node 22)。
 
 ```sh
-# Go: テスト・カバレッジ・ビルド
+# Go(backend/): テスト・カバレッジ・ビルド
+cd backend
 CGO_ENABLED=0 go test ./...
 CGO_ENABLED=0 go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out
 CGO_ENABLED=0 go build ./cmd/heic-converter
 
-# フロントエンド: テスト・lint・ビルド
+# フロントエンド(web/): テスト・lint・ビルド
 cd web && npm test && npm run lint && npm run build
 
-# protoからGo/TypeScript両方のコードを生成
+# protoからGo/TypeScript両方のコードを生成(リポジトリルートで実行)
 buf generate
 ```
 
@@ -192,19 +193,20 @@ buf generate
 クリーンアーキテクチャを採用しています。domain層がデコーダ/エンコーダ/ストレージのinterface(port)を定義し、infra層がそれを実装するため、ライブラリの差し替えが容易です。入力層(presentation)はusecaseのみに依存しており、将来CLI以外(HTTP APIなど)の入口を追加できます。
 
 ```
-cmd/heic-converter/   エントリポイント (DI)
-proto/heic/v1/        APIスキーマ (protobuf)
-internal/
-  domain/             モデルとport定義 (外部ライブラリ非依存)
-  usecase/            変換ロジック (並列処理・fail-soft・進捗通知)
-  infra/              portの実装 (HEICデコーダ・各エンコーダ・ローカルFS)
-  gen/                bufによる生成コード (connect-go)
-  presentation/cli/   CLI (cobra + charmbracelet)
-  presentation/api/   Webサーバー (connect-rpc)
-web/                  フロントエンド (Vite + React, atomic design)
-  src/gen/            bufによる生成コード (protoc-gen-es)
-  src/lib/ src/hooks/ RPC・ブラウザAPIの知識を隔離する層
-  src/components/     atoms / molecules / organisms / templates / pages
+proto/heic/v1/          APIスキーマ (protobuf、Go/TS共通の源泉)
+backend/                Go本体 (CLI + Webサーバー)
+  cmd/heic-converter/   エントリポイント (DI)
+  internal/
+    domain/             モデルとport定義 (外部ライブラリ非依存)
+    usecase/            変換ロジック (並列処理・fail-soft・進捗通知)
+    infra/              portの実装 (HEICデコーダ・各エンコーダ・ローカルFS)
+    gen/                bufによる生成コード (connect-go)
+    presentation/cli/   CLI (cobra + charmbracelet)
+    presentation/api/   Webサーバー (connect-rpc)
+web/                    フロントエンド (Vite + React, atomic design)
+  src/gen/              bufによる生成コード (protoc-gen-es)
+  src/lib/ src/hooks/   RPC・ブラウザAPIの知識を隔離する層
+  src/components/       atoms / molecules / organisms / templates / pages
 ```
 
 HEICのデコードには [gen2brain/heic](https://github.com/gen2brain/heic)(デコーダをWASM化しpure Goランタイムで実行)を採用しており、これが「cgoなしの単一バイナリ」を実現しています。

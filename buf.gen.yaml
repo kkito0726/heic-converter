@@ -3,13 +3,13 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: github.com/kkito0726/heic-converter/internal/gen
+      value: github.com/kkito0726/heic-converter/backend/internal/gen
 plugins:
   - local: protoc-gen-go
-    out: internal/gen
+    out: backend/internal/gen
     opt: paths=source_relative
   - local: protoc-gen-connect-go
-    out: internal/gen
+    out: backend/internal/gen
     opt: paths=source_relative
   # TypeScriptクライアント(web/)向け。リモートプラグインなのでnodeなしで生成できる
   - remote: buf.build/bufbuild/es:v2.12.1
