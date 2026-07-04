@@ -1,0 +1,15 @@
+# ローカル実行用: `docker compose up --build` 後に http://localhost:3000 を開く。
+# webがUIを配信し、RPCパスをapiへプロキシする(同一オリジンのためCORS不要)。
+services:
+  api:
+    build: .
+    # grpcurl等でAPIを直接叩きたい場合用に公開(UI利用だけならweb経由で足りる)
+    ports:
+      - "8080:8080"
+
+  web:
+    build: web
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
