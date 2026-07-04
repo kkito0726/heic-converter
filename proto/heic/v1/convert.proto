@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package heic.v1;
+
+// ConvertServiceはHEIC画像の変換サービス。
+service ConvertService {
+  // ConvertはHEIC/HEIF画像を指定された形式に変換する。
+  rpc Convert(ConvertRequest) returns (ConvertResponse) {}
+
+  // ListFormatsは対応する出力形式の一覧を返す。
+  // 副作用がないため、ConnectプロトコルではGETでも呼び出せる。
+  rpc ListFormats(ListFormatsRequest) returns (ListFormatsResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+}
+
+message ConvertRequest {
+  // HEIC/HEIFのバイナリ(Connect JSONではbase64文字列)。
+  bytes image = 1;
+  // 出力形式: "jpg", "png", "webp", "tiff", "bmp", "gif"(複数指定可)。
+  repeated string formats = 2;
+  // 非可逆形式の品質1-100。0または省略時はデフォルト(90)。
+  uint32 quality = 3;
+}
+
+message ConvertedImage {
+  string format = 1;
+  bytes data = 2;
+}
+
+message ConvertResponse {
+  // formats指定と同じ順序で返す。
+  repeated ConvertedImage images = 1;
+}
+
+message ListFormatsRequest {}
+
+message ListFormatsResponse {
+  repeated string formats = 1;
+}

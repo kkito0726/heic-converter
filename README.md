@@ -101,6 +101,42 @@ heic-converter ./photos -f jpg -q 85 --overwrite
 | bmp | 無圧縮 | |
 | gif | 256色に減色 | |
 
+### Webサーバーモード
+
+`serve` サブコマンドでWebサーバーとして起動できます。単一エンドポイントで **gRPC / gRPC-Web / Connect (HTTP+JSON)** の3プロトコルを受け付けます。
+
+```sh
+heic-converter serve --port 8080
+```
+
+| フラグ | 説明 | デフォルト |
+|---|---|---|
+| `--host` | バインドするアドレス | `0.0.0.0` |
+| `--port` | リッスンするポート | `8080` |
+| `--max-request-bytes` | リクエストサイズ上限(バイト) | 64MiB |
+
+```sh
+# curlで変換(Connectプロトコル + JSON、画像はbase64)
+curl -X POST http://localhost:8080/heic.v1.ConvertService/Convert \
+  -H "Content-Type: application/json" \
+  -d "{\"image\":\"$(base64 -i photo.heic)\",\"formats\":[\"jpg\",\"png\"],\"quality\":90}"
+
+# 対応形式の一覧(副作用がないためGET可)
+curl "http://localhost:8080/heic.v1.ConvertService/ListFormats?connect=v1&encoding=json&message=%7B%7D"
+
+# gRPC(サーバーリフレクション対応なのでprotoファイル不要)
+grpcurl -plaintext -d '{"image":"<base64>","formats":["jpg"]}' \
+  localhost:8080 heic.v1.ConvertService/Convert
+
+# ヘルスチェック(gRPC Health Checking Protocol準拠)
+curl -X POST http://localhost:8080/grpc.health.v1.Health/Check \
+  -H "Content-Type: application/json" -d '{}'
+```
+
+- 変換結果はレスポンスに直接含まれ、サーバー側には何も保存されません(ステートレス)
+- TLS終端・認証はリバースプロキシ側の責務とし、サーバー自身は平文HTTP/2(h2c)で待ち受けます
+- スキーマは [proto/heic/v1/convert.proto](proto/heic/v1/convert.proto) を参照してください
+
 ## 開発
 
 開発環境は [devcontainer](.devcontainer/devcontainer.json) で再現できます(Go 1.26.4)。
@@ -122,13 +158,16 @@ CGO_ENABLED=0 go build ./cmd/heic-converter
 
 ```
 cmd/heic-converter/   エントリポイント (DI)
+proto/heic/v1/        APIスキーマ (protobuf)
 internal/
   domain/             モデルとport定義 (外部ライブラリ非依存)
   usecase/            変換ロジック (並列処理・fail-soft・進捗通知)
   infra/              portの実装 (HEICデコーダ・各エンコーダ・ローカルFS)
+  gen/                bufによる生成コード (connect-go)
   presentation/cli/   CLI (cobra + charmbracelet)
+  presentation/api/   Webサーバー (connect-rpc)
 ```
 
 HEICのデコードには [gen2brain/heic](https://github.com/gen2brain/heic)(デコーダをWASM化しpure Goランタイムで実行)を採用しており、これが「cgoなしの単一バイナリ」を実現しています。
 
-設計の詳細は [doc/cli-converter/prd.md](doc/cli-converter/prd.md) と [doc/cli-converter/implementation-plan.md](doc/cli-converter/implementation-plan.md) を参照してください。
+アーキテクチャの詳細(層の依存ルール、入力層抽象化の解説)は [doc/architecture/clean-architecture-overview.md](doc/architecture/clean-architecture-overview.md) を、各機能の要件は [doc/cli-converter/prd.md](doc/cli-converter/prd.md) と [doc/connect-rpc-server/prd.md](doc/connect-rpc-server/prd.md) を参照してください。

@@ -15,11 +15,24 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.26.4"
+      - name: Install buf and protoc plugins
+        run: |
+          go install github.com/bufbuild/buf/cmd/buf@v1.71.0
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.11
+          go install connectrpc.com/connect/cmd/protoc-gen-connect-go@v1.20.0
+      - name: Lint proto
+        run: buf lint
+      - name: Check generated code is up to date
+        run: |
+          buf generate
+          git diff --exit-code internal/gen
       - name: Vet
         run: go vet ./...
       - name: Test
         run: go test -coverprofile=coverage.out ./...
-      - name: Coverage
-        run: go tool cover -func=coverage.out | tail -1
+      - name: Coverage (generated code excluded)
+        run: |
+          grep -v "/internal/gen/" coverage.out > coverage.filtered.out
+          go tool cover -func=coverage.filtered.out | tail -1
       - name: Build
         run: go build ./cmd/heic-converter
