@@ -143,14 +143,16 @@ curl -X POST http://localhost:8080/grpc.health.v1.Health/Check \
 `web/` にブラウザ用のUI(Vite + React + TypeScript)があります。HEICを選んで形式を選ぶだけで変換でき、スマホではOSの共有シート経由でGoogle Drive保存やメール添付までそのまま行えます。変換画像はサーバーにもブラウザにも永続化されません。
 
 ```sh
-# 1. APIサーバーを起動(開発サーバーのオリジンをCORSで許可)
-heic-converter serve --allowed-origins http://localhost:5173
+# 1. APIサーバーを起動
+heic-converter serve
 
-# 2. フロント開発サーバーを起動
+# 2. フロント開発サーバーを起動(RPCはViteのプロキシ経由でserveへ届く)
 cd web
 npm install
-VITE_API_URL=http://localhost:8080 npm run dev
+npm run dev
 ```
+
+開発サーバーはRPCパスを `localhost:8080` へプロキシするため、CORSや接続先の設定は不要です。別ホストのAPIサーバーへ直接つなぐ場合のみ `VITE_API_URL=<サーバーURL> npm run dev` で指定し、serve側で `--allowed-origins <フロントのオリジン>` を許可してください。
 
 要件・設計は [doc/frontend-web-ui/prd.md](doc/frontend-web-ui/prd.md) を参照してください。
 
