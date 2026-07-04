@@ -1,10 +1,13 @@
 import type { ConversionStatus } from '../../types'
 
-const STYLES: Record<ConversionStatus, string> = {
-  waiting: 'bg-slate-100 text-slate-600',
-  converting: 'bg-amber-100 text-amber-700',
-  done: 'bg-emerald-100 text-emerald-700',
-  error: 'bg-rose-100 text-rose-700',
+const TONES: Record<ConversionStatus, { text: string; dot: string }> = {
+  waiting: { text: 'text-faint', dot: 'bg-faint' },
+  converting: {
+    text: 'text-amber-bright',
+    dot: 'bg-amber animate-[blink_1s_ease-in-out_infinite]',
+  },
+  done: { text: 'text-ok', dot: 'bg-ok' },
+  error: { text: 'text-err', dot: 'bg-err' },
 }
 
 const LABELS: Record<ConversionStatus, string> = {
@@ -14,10 +17,14 @@ const LABELS: Record<ConversionStatus, string> = {
   error: 'Failed',
 }
 
-// ファイルごとの変換ステータス表示(FR-3)。
+// インジケータランプ+モノスペースの機材風ステータス表示(FR-3)。
 export function Badge({ status }: { status: ConversionStatus }) {
+  const tone = TONES[status]
   return (
-    <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${STYLES[status]}`}>
+    <span
+      className={`inline-flex w-24 shrink-0 items-center gap-1.5 font-mono text-[10px] tracking-[0.14em] uppercase ${tone.text}`}
+    >
+      <span aria-hidden="true" className={`size-1.5 rounded-full ${tone.dot}`} />
       {LABELS[status]}
     </span>
   )

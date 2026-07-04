@@ -1,6 +1,5 @@
 import { Button } from '../atoms/Button'
 import { ProgressBar } from '../atoms/ProgressBar'
-import { Spinner } from '../atoms/Spinner'
 import { FormatSelector } from '../molecules/FormatSelector'
 import { QualitySlider } from '../molecules/QualitySlider'
 
@@ -21,7 +20,7 @@ interface Props {
   onCancel: () => void
 }
 
-// 変換設定(形式・品質)と実行・キャンセル・進捗をまとめたパネル(FR-2 / FR-3)。
+// 変換設定(形式・品質)と実行・キャンセル・進捗をまとめた操作パネル(FR-2 / FR-3)。
 export function ConvertPanel({
   formats,
   formatsError,
@@ -39,35 +38,43 @@ export function ConvertPanel({
   return (
     <section
       aria-label="Conversion settings"
-      className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4"
+      className="flex flex-col gap-5 rounded-sm border border-line bg-panel p-4"
     >
-      <h2 className="text-sm font-semibold text-slate-900">Output formats</h2>
-      {formatsError ? (
-        <p className="text-sm text-rose-600">{formatsError}</p>
-      ) : (
-        <FormatSelector
-          formats={formats}
-          selected={selected}
-          disabled={converting}
-          onToggle={onToggleFormat}
-        />
-      )}
-      <QualitySlider value={quality} enabled={qualityEnabled && !converting} onChange={onQualityChange} />
+      <div>
+        <h2 className="mb-2.5 font-mono text-[10px] tracking-[0.16em] text-dim uppercase">
+          Output formats
+        </h2>
+        {formatsError ? (
+          <p className="font-mono text-xs text-err">{formatsError}</p>
+        ) : (
+          <FormatSelector
+            formats={formats}
+            selected={selected}
+            disabled={converting}
+            onToggle={onToggleFormat}
+          />
+        )}
+      </div>
+      <QualitySlider
+        value={quality}
+        enabled={qualityEnabled && !converting}
+        onChange={onQualityChange}
+      />
       {converting ? (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
           <ProgressBar value={progress.done} max={progress.total} />
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-2 text-sm text-slate-500">
-              <Spinner />
-              {progress.done} / {progress.total}
+            <span className="font-mono text-xs tabular-nums text-amber-bright">
+              {progress.done}&thinsp;/&thinsp;{progress.total}
+              <span className="ml-2 text-faint">processing…</span>
             </span>
-            <Button variant="secondary" onClick={onCancel}>
+            <Button variant="secondary" className="min-h-9 px-3" onClick={onCancel}>
               Cancel
             </Button>
           </div>
         </div>
       ) : (
-        <Button disabled={!canConvert} onClick={onConvert}>
+        <Button className="w-full" disabled={!canConvert} onClick={onConvert}>
           Convert
         </Button>
       )}

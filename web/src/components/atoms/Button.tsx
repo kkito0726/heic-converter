@@ -3,22 +3,24 @@ import type { ButtonHTMLAttributes } from 'react'
 type Variant = 'primary' | 'secondary' | 'ghost'
 
 const STYLES: Record<Variant, string> = {
-  primary: 'bg-indigo-600 text-white hover:bg-indigo-500 disabled:bg-slate-300',
+  primary:
+    'bg-amber text-ink hover:bg-amber-bright active:translate-y-px disabled:bg-panel-raised disabled:text-faint',
   secondary:
-    'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:text-slate-300',
-  ghost: 'text-slate-400 hover:bg-slate-100 hover:text-slate-600',
+    'border border-line-strong bg-transparent text-text hover:border-amber hover:text-amber-bright disabled:border-line disabled:text-faint',
+  ghost: 'text-faint hover:bg-panel-raised hover:text-text',
 }
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant
 }
 
-// 最小44pxのタップターゲットを保証する共通ボタン(FR-6)。
+// 計器のキーを思わせるモノスペース・角の締まったボタン。
+// 最小44pxのタップターゲットを保証する(FR-6)。
 export function Button({ variant = 'primary', className = '', type = 'button', ...rest }: Props) {
   return (
     <button
       type={type}
-      className={`inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-lg px-4 text-sm font-medium transition-colors disabled:cursor-not-allowed ${STYLES[variant]} ${className}`}
+      className={`inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-sm px-4 font-mono text-xs font-medium tracking-[0.08em] uppercase transition-all duration-150 disabled:cursor-not-allowed ${STYLES[variant]} ${className}`}
       {...rest}
     />
   )

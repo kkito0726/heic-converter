@@ -5,21 +5,26 @@ interface Props {
   onChange: (checked: boolean) => void
 }
 
-// ラベル全体がタップ領域になるチェックボックス(FR-6)。
+// フォーマット選択用のチップ型チェックボックス。選択状態はインジケータ
+// ドットとアンバーの枠で示す。ラベル全体がタップ領域(FR-6)。
 export function Checkbox({ label, checked, disabled, onChange }: Props) {
-  const border = checked
-    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-    : 'border-slate-300 text-slate-600'
+  const tone = checked
+    ? 'border-amber/70 bg-amber/10 text-amber-bright'
+    : 'border-line text-dim hover:border-line-strong hover:text-text'
   return (
     <label
-      className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 text-sm ${border} ${disabled ? 'pointer-events-none opacity-40' : ''}`}
+      className={`flex min-h-11 cursor-pointer items-center gap-2.5 rounded-sm border px-3 font-mono text-xs tracking-[0.1em] uppercase transition-colors duration-150 ${tone} ${disabled ? 'pointer-events-none opacity-40' : ''}`}
     >
       <input
         type="checkbox"
-        className="accent-indigo-600"
+        className="sr-only"
         checked={checked}
         disabled={disabled}
         onChange={(event) => onChange(event.target.checked)}
+      />
+      <span
+        aria-hidden="true"
+        className={`size-1.5 shrink-0 rounded-full transition-colors duration-150 ${checked ? 'bg-amber' : 'bg-faint/60'}`}
       />
       {label}
     </label>

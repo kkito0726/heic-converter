@@ -3,6 +3,7 @@ interface Props {
   max: number
 }
 
+// 2pxのヘアラインプログレス。走査光(シマー)で進行中を示す。
 export function ProgressBar({ value, max }: Props) {
   const percent = max === 0 ? 0 : Math.round((value / max) * 100)
   return (
@@ -11,9 +12,12 @@ export function ProgressBar({ value, max }: Props) {
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={max}
-      className="h-2 w-full overflow-hidden rounded-full bg-slate-200"
+      className="h-0.5 w-full overflow-hidden bg-line"
     >
-      <div className="h-full bg-indigo-600 transition-all" style={{ width: `${percent}%` }} />
+      <div
+        className="shimmer relative h-full bg-amber transition-[width] duration-300"
+        style={{ width: `${percent}%` }}
+      />
     </div>
   )
 }

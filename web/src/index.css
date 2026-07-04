@@ -1,1 +1,171 @@
+/* セルフホストフォント(外部リクエストなし=プライバシー方針と一貫) */
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+
 @import "tailwindcss";
+
+/*
+ * デザインテーマ: darkroom instrument(暗室の精密機材)
+ * 温かみのあるグラファイト地 + セーフライトのアンバー1色をアクセントに、
+ * データはモノスペース・ヘアライン罫線で揃えるプロツールの密度感。
+ */
+@theme {
+  --color-ink: #100f0d;
+  --color-panel: #171511;
+  --color-panel-raised: #1d1a15;
+  --color-well: #0b0a08;
+  --color-line: rgb(255 244 224 / 0.09);
+  --color-line-strong: rgb(255 244 224 / 0.18);
+  --color-text: #ece6da;
+  --color-dim: #a49b8c;
+  --color-faint: #6e675c;
+  --color-amber: #f0a63e;
+  --color-amber-bright: #ffc164;
+  --color-ok: #8fc98f;
+  --color-err: #e88a72;
+
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color-scheme: dark;
+  }
+
+  body {
+    font-family: var(--font-display);
+    color: var(--color-text);
+    /* セーフライトの残光(左上のアンバー)で暗室の空気感を作る */
+    background:
+      radial-gradient(900px 520px at 12% -8%, rgb(240 166 62 / 0.07), transparent 60%),
+      radial-gradient(1200px 700px at 88% 112%, rgb(240 166 62 / 0.04), transparent 55%),
+      var(--color-ink);
+    background-attachment: fixed;
+  }
+
+  /* フィルムグレイン(SVGノイズ、外部リソースなし) */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: var(--color-amber);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-amber);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border: 3px solid var(--color-ink);
+    border-radius: 8px;
+  }
+}
+
+@layer components {
+  /* 起動時のスタッガー表示(セクションごとにdelayを付ける) */
+  .reveal {
+    animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* 計器風スライダー */
+  .gauge {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 2px;
+    width: 100%;
+    background: linear-gradient(
+      to right,
+      var(--color-amber) 0%,
+      var(--color-amber) var(--gauge-fill, 50%),
+      var(--color-line-strong) var(--gauge-fill, 50%)
+    );
+    cursor: ew-resize;
+  }
+  .gauge:disabled {
+    background: var(--color-line);
+    cursor: not-allowed;
+  }
+  .gauge::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    rotate: 45deg;
+    background: var(--color-amber);
+    border: none;
+    transition: background 0.15s, scale 0.15s;
+  }
+  .gauge:disabled::-webkit-slider-thumb {
+    background: var(--color-faint);
+  }
+  .gauge:not(:disabled):hover::-webkit-slider-thumb {
+    background: var(--color-amber-bright);
+    scale: 1.15;
+  }
+  .gauge::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background: var(--color-amber);
+    border: none;
+  }
+
+  /* 変換中プログレスのシマー */
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+    animation: sweep 1.4s linear infinite;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .shimmer::after {
+    animation: none;
+  }
+}

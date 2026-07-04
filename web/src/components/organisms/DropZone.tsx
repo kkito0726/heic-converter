@@ -1,5 +1,13 @@
 import { useState, type DragEvent } from 'react'
 
+// 四隅のコーナーマーク(ファインダーのフレーミングを模す)。
+const CORNERS = [
+  'top-2 left-2 border-t border-l',
+  'top-2 right-2 border-t border-r',
+  'bottom-2 left-2 border-b border-l',
+  'bottom-2 right-2 border-b border-r',
+] as const
+
 interface Props {
   disabled?: boolean
   onFiles: (files: File[]) => void
@@ -17,13 +25,13 @@ export function DropZone({ disabled, onFiles }: Props) {
     onFiles(Array.from(event.dataTransfer.files))
   }
 
-  const border = dragging
-    ? 'border-indigo-500 bg-indigo-50'
-    : 'border-slate-300 bg-white hover:border-indigo-400'
+  const tone = dragging
+    ? 'border-amber bg-amber/5'
+    : 'border-line-strong bg-panel hover:border-amber/60 hover:bg-panel-raised'
 
   return (
     <label
-      className={`block w-full cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-colors ${border} ${disabled ? 'pointer-events-none opacity-50' : ''}`}
+      className={`group relative block w-full cursor-pointer rounded-sm border border-dashed px-8 py-12 text-center transition-all duration-200 ${tone} ${disabled ? 'pointer-events-none opacity-50' : ''}`}
       onDragOver={(event) => {
         event.preventDefault()
         setDragging(true)
@@ -44,8 +52,23 @@ export function DropZone({ disabled, onFiles }: Props) {
           event.target.value = ''
         }}
       />
-      <p className="text-lg font-medium text-slate-700">Tap to choose HEIC files</p>
-      <p className="mt-1 text-sm text-slate-400">or drag &amp; drop here — multiple files OK</p>
+      {CORNERS.map((pos) => (
+        <span
+          key={pos}
+          aria-hidden="true"
+          className={`absolute size-3 transition-colors duration-200 ${pos} ${dragging ? 'border-amber' : 'border-line-strong group-hover:border-amber/60'}`}
+        />
+      ))}
+      <span
+        aria-hidden="true"
+        className={`mb-4 inline-flex size-11 items-center justify-center rounded-full border text-lg transition-all duration-200 ${dragging ? 'border-amber text-amber' : 'border-line-strong text-dim group-hover:border-amber/60 group-hover:text-amber'}`}
+      >
+        ↓
+      </span>
+      <p className="text-lg font-semibold tracking-tight text-text">Tap to choose HEIC files</p>
+      <p className="mt-2 font-mono text-[11px] tracking-[0.08em] text-faint uppercase">
+        or drag &amp; drop here — multiple files OK
+      </p>
     </label>
   )
 }

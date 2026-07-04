@@ -7,10 +7,10 @@ interface Props {
   onToggle: (format: string) => void
 }
 
-// ListFormats RPCから取得した形式をチェックボックスで複数選択する(FR-2)。
+// ListFormats RPCから取得した形式をチップで複数選択する(FR-2)。
 export function FormatSelector({ formats, selected, disabled, onToggle }: Props) {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-3 gap-1.5">
       {formats.map((format) => (
         <Checkbox
           key={format}

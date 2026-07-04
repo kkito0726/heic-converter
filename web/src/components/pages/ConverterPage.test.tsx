@@ -107,7 +107,7 @@ describe('ConverterPage', () => {
     })
 
     it('opens the OS share sheet when supported (FR-5)', async () => {
-      const share = vi.fn(async () => {})
+      const share = vi.fn(async (_data?: ShareData) => {})
       vi.stubGlobal('navigator', { ...navigator, share, canShare: () => true })
       const user = userEvent.setup()
       render(<ConverterPage client={fakeClient()} />)
@@ -116,8 +116,8 @@ describe('ConverterPage', () => {
       await user.click(screen.getByRole('button', { name: 'Share…' }))
 
       expect(share).toHaveBeenCalledOnce()
-      const shared = share.mock.calls[0][0] as ShareData
-      expect(shared.files?.[0].name).toBe('photo.jpg')
+      const shared = share.mock.calls[0][0]
+      expect(shared?.files?.[0].name).toBe('photo.jpg')
     })
 
     it('shares a single file from its list item (FR-5)', async () => {
