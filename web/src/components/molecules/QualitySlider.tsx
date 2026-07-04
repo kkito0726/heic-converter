@@ -22,6 +22,9 @@ export function QualitySlider({ value, enabled, onChange }: Props) {
         </span>
       </div>
       <Slider id="quality" min={1} max={100} value={value} disabled={!enabled} onChange={onChange} />
+      <p className="mt-2 text-[11px] leading-relaxed text-faint">
+        Higher = better quality, larger file. Only affects lossy formats (jpg / webp).
+      </p>
     </div>
   )
 }
