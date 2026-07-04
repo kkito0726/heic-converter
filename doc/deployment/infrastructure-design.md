@@ -67,7 +67,7 @@ Cloud Runを推す理由:
 - 無料枠が恒久(Always Free)かつ十分: **月200万リクエスト・vCPU 18万秒・メモリ36万GiB秒**
 - コンテナ=単一Goバイナリがそのまま動く。h2c対応済みなのでgRPCもそのまま通る
   (Cloud RunはHTTP/2エンドツーエンドに対応。`--use-http2`を有効化する)
-- コールドスタートが軽い: scratchベースの~20MBイメージなら1秒前後で、変換アプリとして許容範囲
+- コールドスタートが軽い: distroless/baseベースの~50MBイメージなら1秒前後で、変換アプリとして許容範囲
 - ヘルスチェック(実装済みの`grpc.health.v1.Health`)をstartup probeにそのまま使える
 
 フロント側の比較は簡単で、**Cloudflare Pagesが帯域無制限で無料**のため一択
@@ -91,7 +91,7 @@ Cloud Runを推す理由:
 - 無料egress枠は北米リージョン発のみのため、0円優先なら **us-west1等の北米リージョン** に置く。
   日本からのレイテンシは+100ms強だが、変換処理自体が秒単位なので体感影響は小さい。
   応答速度優先なら東京(asia-northeast1)にして数十円/月の egress を許容する
-- その他: Artifact Registry(イメージ保存)は0.5GB無料 — イメージ~20MBなので古いタグを消せば0円。
+- その他: Artifact Registry(イメージ保存)は0.5GB無料 — イメージ~50MBなので古いタグを消せば0円。
   GitHub Actionsはパブリックリポジトリなら無料無制限。Cloud Loggingも50GiB/月無料
 
 ## 5. コスト暴走ガード(必ず設定する)
@@ -126,8 +126,8 @@ sequenceDiagram
 
     Dev->>GH: mainへマージ(またはv*タグ)
     par API のデプロイ
-        GH->>GH: docker build(scratch + 静的バイナリ)
-        GH->>AR: push(~20MB)
+        GH->>GH: docker build(distroless/base + Goバイナリ)
+        GH->>AR: push(~50MB)
         GH->>CR: gcloud run deploy(WIFでキーレス認証)
         CR->>CR: startup probe = Health/Check
     and フロントのデプロイ
@@ -136,15 +136,20 @@ sequenceDiagram
     end
 ```
 
-Dockerfileは多段ビルドで最小構成にする(イメージが小さいほどコールドスタートも速い):
+Dockerfileは多段ビルドで最小構成にする(イメージが小さいほどコールドスタートも速い)。
+リポジトリの [Dockerfile](../../Dockerfile)(docker compose用に整備済み)をそのまま使う:
 
 ```dockerfile
 FROM golang:1.26 AS build
 WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /heic-converter ./cmd/heic-converter
 
-FROM scratch
+# 注意: cgo不使用でも依存のpurego(gen2brain系のFFI層)が動的ローダーを要求する
+# ため、scratchでは起動できない。glibcのみ同梱のdistroless/baseを使う(実測で確認済み)
+FROM gcr.io/distroless/base-debian12:nonroot
 COPY --from=build /heic-converter /heic-converter
 ENTRYPOINT ["/heic-converter", "serve"]
 ```
