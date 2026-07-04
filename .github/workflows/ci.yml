@@ -25,7 +25,7 @@ jobs:
       - name: Check generated code is up to date
         run: |
           buf generate
-          git diff --exit-code internal/gen
+          git diff --exit-code internal/gen web/src/gen
       - name: Vet
         run: go vet ./...
       - name: Test
@@ -36,3 +36,24 @@ jobs:
           go tool cover -func=coverage.filtered.out | tail -1
       - name: Build
         run: go build ./cmd/heic-converter
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm test
+      - name: Build (includes type check)
+        run: npm run build

@@ -5,6 +5,9 @@
     "ghcr.io/devcontainers/features/go:1": {
       "version": "1.26.4"
     },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22"
+    },
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
   "containerEnv": {
@@ -13,7 +16,14 @@
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
-      "extensions": ["golang.go", "bufbuild.vscode-buf"]
+      "extensions": [
+        "golang.go",
+        "bufbuild.vscode-buf",
+        "oxc.oxc-vscode",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "vitest.explorer"
+      ]
     }
   }
 }
