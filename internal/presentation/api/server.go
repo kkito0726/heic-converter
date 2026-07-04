@@ -11,8 +11,10 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
+	connectcors "connectrpc.com/cors"
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
+	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
@@ -31,6 +33,10 @@ type Config struct {
 	Port int
 	// MaxRequestBytesはリクエストサイズ上限。0以下ならDefaultMaxRequestBytes。
 	MaxRequestBytes int
+	// AllowedOriginsはブラウザ(connect-web)からの別オリジンアクセスを許可する
+	// オリジンの一覧。空ならCORSヘッダを付与しない(同一オリジン配信や
+	// 非ブラウザクライアントのみの構成)。
+	AllowedOrigins []string
 	// Loggerはnilなら標準エラーへのテキストロガー。
 	Logger *slog.Logger
 }
@@ -71,7 +77,24 @@ func NewHandler(conv *usecase.Converter, cfg Config) http.Handler {
 	mux.Handle(grpcreflect.NewHandlerV1(reflector))
 	mux.Handle(grpcreflect.NewHandlerV1Alpha(reflector))
 
-	return h2c.NewHandler(mux, &http2.Server{})
+	return h2c.NewHandler(withCORS(mux, cfg.AllowedOrigins), &http2.Server{})
+}
+
+// withCORSは許可オリジンからのブラウザアクセスに必要なCORSヘッダを付与する。
+// 許可・公開するメソッドとヘッダはconnect-rpcの3プロトコルが必要とするものに
+// 合わせる(connectrpc.com/corsが提供する一覧を使う)。
+func withCORS(h http.Handler, origins []string) http.Handler {
+	if len(origins) == 0 {
+		return h
+	}
+	middleware := cors.New(cors.Options{
+		AllowedOrigins: origins,
+		AllowedMethods: connectcors.AllowedMethods(),
+		AllowedHeaders: connectcors.AllowedHeaders(),
+		ExposedHeaders: connectcors.ExposedHeaders(),
+		MaxAge:         7200, // プリフライト結果をブラウザにキャッシュさせる(秒)
+	})
+	return middleware.Handler(h)
 }
 
 // Serveはサーバーを起動し、ctxのキャンセルでgraceful shutdownする。

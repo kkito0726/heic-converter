@@ -4,6 +4,7 @@ go 1.26.4
 
 require (
 	connectrpc.com/connect v1.20.0
+	connectrpc.com/cors v0.1.0
 	connectrpc.com/grpchealth v1.5.0
 	connectrpc.com/grpcreflect v1.3.0
 	github.com/charmbracelet/bubbles v1.0.0
@@ -12,6 +13,7 @@ require (
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/gen2brain/heic v0.6.1
 	github.com/gen2brain/webp v0.6.4
+	github.com/rs/cors v1.11.1
 	github.com/spf13/cobra v1.10.2
 	golang.org/x/image v0.43.0
 	golang.org/x/net v0.56.0
