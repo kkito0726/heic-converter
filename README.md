@@ -170,4 +170,4 @@ internal/
 
 HEICのデコードには [gen2brain/heic](https://github.com/gen2brain/heic)(デコーダをWASM化しpure Goランタイムで実行)を採用しており、これが「cgoなしの単一バイナリ」を実現しています。
 
-設計の詳細は [doc/cli-converter/prd.md](doc/cli-converter/prd.md) と [doc/cli-converter/implementation-plan.md](doc/cli-converter/implementation-plan.md) を参照してください。
+アーキテクチャの詳細(層の依存ルール、入力層抽象化の解説)は [doc/architecture/clean-architecture-overview.md](doc/architecture/clean-architecture-overview.md) を、各機能の要件は [doc/cli-converter/prd.md](doc/cli-converter/prd.md) と [doc/connect-rpc-server/prd.md](doc/connect-rpc-server/prd.md) を参照してください。
