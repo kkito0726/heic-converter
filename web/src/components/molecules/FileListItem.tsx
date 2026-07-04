@@ -47,9 +47,9 @@ export function FileListItem({ entry, disabled, canShare, onRemove, onShare }: P
               key={result.format}
               href={result.url}
               download={result.filename}
-              className="inline-flex min-h-8 items-center gap-1.5 rounded-sm border border-line bg-well px-2.5 font-mono text-[11px] text-dim transition-colors hover:border-amber/60 hover:text-amber-bright"
+              className="inline-flex min-h-8 items-center gap-1.5 rounded-sm border border-line bg-well px-2.5 font-mono text-[11px] text-dim transition-colors hover:border-accent/60 hover:text-accent-bright"
             >
-              <span aria-hidden="true" className="text-amber">
+              <span aria-hidden="true" className="text-accent">
                 ↓
               </span>
               {result.filename}

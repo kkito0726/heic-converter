@@ -17,7 +17,7 @@ export function QualitySlider({ value, enabled, onChange }: Props) {
         >
           Quality (jpg / webp)
         </label>
-        <span className="font-mono text-sm tabular-nums text-amber-bright">
+        <span className="font-mono text-sm tabular-nums text-accent-bright">
           {String(value).padStart(3, '0')}
         </span>
       </div>

@@ -3,8 +3,8 @@ import type { ConversionStatus } from '../../types'
 const TONES: Record<ConversionStatus, { text: string; dot: string }> = {
   waiting: { text: 'text-faint', dot: 'bg-faint' },
   converting: {
-    text: 'text-amber-bright',
-    dot: 'bg-amber animate-[blink_1s_ease-in-out_infinite]',
+    text: 'text-accent-bright',
+    dot: 'bg-accent animate-[blink_1s_ease-in-out_infinite]',
   },
   done: { text: 'text-ok', dot: 'bg-ok' },
   error: { text: 'text-err', dot: 'bg-err' },

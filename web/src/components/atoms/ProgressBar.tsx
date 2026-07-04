@@ -15,7 +15,7 @@ export function ProgressBar({ value, max }: Props) {
       className="h-0.5 w-full overflow-hidden bg-line"
     >
       <div
-        className="shimmer relative h-full bg-amber transition-[width] duration-300"
+        className="shimmer relative h-full bg-accent transition-[width] duration-300"
         style={{ width: `${percent}%` }}
       />
     </div>

@@ -6,10 +6,10 @@ interface Props {
 }
 
 // フォーマット選択用のチップ型チェックボックス。選択状態はインジケータ
-// ドットとアンバーの枠で示す。ラベル全体がタップ領域(FR-6)。
+// ドットとアクセント色の枠で示す。ラベル全体がタップ領域(FR-6)。
 export function Checkbox({ label, checked, disabled, onChange }: Props) {
   const tone = checked
-    ? 'border-amber/70 bg-amber/10 text-amber-bright'
+    ? 'border-accent/70 bg-accent/10 text-accent-bright'
     : 'border-line text-dim hover:border-line-strong hover:text-text'
   return (
     <label
@@ -24,7 +24,7 @@ export function Checkbox({ label, checked, disabled, onChange }: Props) {
       />
       <span
         aria-hidden="true"
-        className={`size-1.5 shrink-0 rounded-full transition-colors duration-150 ${checked ? 'bg-amber' : 'bg-faint/60'}`}
+        className={`size-1.5 shrink-0 rounded-full transition-colors duration-150 ${checked ? 'bg-accent' : 'bg-faint/60'}`}
       />
       {label}
     </label>

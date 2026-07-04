@@ -26,8 +26,8 @@ export function DropZone({ disabled, onFiles }: Props) {
   }
 
   const tone = dragging
-    ? 'border-amber bg-amber/5'
-    : 'border-line-strong bg-panel hover:border-amber/60 hover:bg-panel-raised'
+    ? 'border-accent bg-accent/5'
+    : 'border-line-strong bg-panel hover:border-accent/60 hover:bg-panel-raised'
 
   return (
     <label
@@ -56,12 +56,12 @@ export function DropZone({ disabled, onFiles }: Props) {
         <span
           key={pos}
           aria-hidden="true"
-          className={`absolute size-3 transition-colors duration-200 ${pos} ${dragging ? 'border-amber' : 'border-line-strong group-hover:border-amber/60'}`}
+          className={`absolute size-3 transition-colors duration-200 ${pos} ${dragging ? 'border-accent' : 'border-line-strong group-hover:border-accent/60'}`}
         />
       ))}
       <span
         aria-hidden="true"
-        className={`mb-4 inline-flex size-11 items-center justify-center rounded-full border text-lg transition-all duration-200 ${dragging ? 'border-amber text-amber' : 'border-line-strong text-dim group-hover:border-amber/60 group-hover:text-amber'}`}
+        className={`mb-4 inline-flex size-11 items-center justify-center rounded-full border text-lg transition-all duration-200 ${dragging ? 'border-accent text-accent' : 'border-line-strong text-dim group-hover:border-accent/60 group-hover:text-accent'}`}
       >
         ↓
       </span>

@@ -64,7 +64,7 @@ export function ConvertPanel({
         <div className="flex flex-col gap-3">
           <ProgressBar value={progress.done} max={progress.total} />
           <div className="flex items-center justify-between">
-            <span className="font-mono text-xs tabular-nums text-amber-bright">
+            <span className="font-mono text-xs tabular-nums text-accent-bright">
               {progress.done}&thinsp;/&thinsp;{progress.total}
               <span className="ml-2 text-faint">processing…</span>
             </span>
