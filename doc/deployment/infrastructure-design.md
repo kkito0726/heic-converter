@@ -137,7 +137,7 @@ sequenceDiagram
 ```
 
 Dockerfileは多段ビルドで最小構成にする(イメージが小さいほどコールドスタートも速い)。
-リポジトリの [Dockerfile](../../Dockerfile)(docker compose用に整備済み)をそのまま使う:
+リポジトリの [backend/Dockerfile](../../backend/Dockerfile)(docker compose用に整備済み)をそのまま使う:
 
 ```dockerfile
 FROM golang:1.26 AS build
