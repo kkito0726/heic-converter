@@ -199,6 +199,72 @@ func TestHealthCheck(t *testing.T) {
 	}
 }
 
+// AllowedOrigins設定時、ブラウザ(connect-web)からの別オリジンアクセスに
+// 必要なCORSヘッダが返ること。
+func TestCORS(t *testing.T) {
+	srv := newTestServer(t, Config{AllowedOrigins: []string{"https://front.example.com"}})
+	procedure := srv.URL + "/heic.v1.ConvertService/Convert"
+
+	t.Run("preflight from allowed origin", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodOptions, procedure, nil)
+		req.Header.Set("Origin", "https://front.example.com")
+		req.Header.Set("Access-Control-Request-Method", "POST")
+		// ブラウザはfetch仕様に従い小文字・空白なしのカンマ区切りで送る
+		req.Header.Set("Access-Control-Request-Headers", "connect-protocol-version,content-type")
+
+		res, err := srv.Client().Do(req)
+		if err != nil {
+			t.Fatalf("preflight error: %v", err)
+		}
+		defer res.Body.Close()
+		if got := res.Header.Get("Access-Control-Allow-Origin"); got != "https://front.example.com" {
+			t.Errorf("Access-Control-Allow-Origin = %q, want allowed origin", got)
+		}
+		if got := res.Header.Get("Access-Control-Allow-Headers"); got == "" {
+			t.Error("Access-Control-Allow-Headers is empty")
+		}
+	})
+
+	t.Run("preflight from disallowed origin", func(t *testing.T) {
+		req, _ := http.NewRequest(http.MethodOptions, procedure, nil)
+		req.Header.Set("Origin", "https://evil.example.com")
+		req.Header.Set("Access-Control-Request-Method", "POST")
+
+		res, err := srv.Client().Do(req)
+		if err != nil {
+			t.Fatalf("preflight error: %v", err)
+		}
+		defer res.Body.Close()
+		if got := res.Header.Get("Access-Control-Allow-Origin"); got != "" {
+			t.Errorf("Access-Control-Allow-Origin = %q, want empty for disallowed origin", got)
+		}
+	})
+
+	t.Run("rpc still works with CORS enabled", func(t *testing.T) {
+		client := heicv1connect.NewConvertServiceClient(srv.Client(), srv.URL)
+		if _, err := client.ListFormats(context.Background(), connect.NewRequest(&heicv1.ListFormatsRequest{})); err != nil {
+			t.Fatalf("ListFormats() error with CORS enabled: %v", err)
+		}
+	})
+}
+
+// AllowedOrigins未設定(デフォルト)ではCORSヘッダを返さないこと。
+func TestCORSDisabledByDefault(t *testing.T) {
+	srv := newTestServer(t, Config{})
+	req, _ := http.NewRequest(http.MethodOptions, srv.URL+"/heic.v1.ConvertService/Convert", nil)
+	req.Header.Set("Origin", "https://front.example.com")
+	req.Header.Set("Access-Control-Request-Method", "POST")
+
+	res, err := srv.Client().Do(req)
+	if err != nil {
+		t.Fatalf("preflight error: %v", err)
+	}
+	defer res.Body.Close()
+	if got := res.Header.Get("Access-Control-Allow-Origin"); got != "" {
+		t.Errorf("Access-Control-Allow-Origin = %q, want empty when CORS is disabled", got)
+	}
+}
+
 func TestConfigDefaults(t *testing.T) {
 	cfg := Config{}
 	if got := cfg.maxRequestBytes(); got != DefaultMaxRequestBytes {

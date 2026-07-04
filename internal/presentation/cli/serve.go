@@ -24,5 +24,6 @@ func newServeCmd(conv *usecase.Converter) *cobra.Command {
 	f.StringVar(&cfg.Host, "host", "0.0.0.0", "address to bind")
 	f.IntVar(&cfg.Port, "port", 8080, "port to listen on")
 	f.IntVar(&cfg.MaxRequestBytes, "max-request-bytes", api.DefaultMaxRequestBytes, "request body size limit in bytes")
+	f.StringSliceVar(&cfg.AllowedOrigins, "allowed-origins", nil, "CORS origins allowed for browser clients (e.g. http://localhost:5173)")
 	return cmd
 }

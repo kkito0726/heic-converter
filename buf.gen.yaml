@@ -11,3 +11,7 @@ plugins:
   - local: protoc-gen-connect-go
     out: internal/gen
     opt: paths=source_relative
+  # TypeScriptクライアント(web/)向け。リモートプラグインなのでnodeなしで生成できる
+  - remote: buf.build/bufbuild/es:v2.12.1
+    out: web/src/gen
+    opt: target=ts

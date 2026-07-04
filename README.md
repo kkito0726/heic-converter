@@ -114,6 +114,7 @@ heic-converter serve --port 8080
 | `--host` | バインドするアドレス | `0.0.0.0` |
 | `--port` | リッスンするポート | `8080` |
 | `--max-request-bytes` | リクエストサイズ上限(バイト) | 64MiB |
+| `--allowed-origins` | ブラウザからのアクセスを許可するCORSオリジン(カンマ区切り) | なし(CORS無効) |
 
 ```sh
 # curlで変換(Connectプロトコル + JSON、画像はbase64)
@@ -137,19 +138,39 @@ curl -X POST http://localhost:8080/grpc.health.v1.Health/Check \
 - TLS終端・認証はリバースプロキシ側の責務とし、サーバー自身は平文HTTP/2(h2c)で待ち受けます
 - スキーマは [proto/heic/v1/convert.proto](proto/heic/v1/convert.proto) を参照してください
 
-## 開発
+### Webフロントエンド
 
-開発環境は [devcontainer](.devcontainer/devcontainer.json) で再現できます(Go 1.26.4)。
+`web/` にブラウザ用のUI(Vite + React + TypeScript)があります。HEICを選んで形式を選ぶだけで変換でき、スマホではOSの共有シート経由でGoogle Drive保存やメール添付までそのまま行えます。変換画像はサーバーにもブラウザにも永続化されません。
 
 ```sh
-# テスト
+# 1. APIサーバーを起動
+heic-converter serve
+
+# 2. フロント開発サーバーを起動(RPCはViteのプロキシ経由でserveへ届く)
+cd web
+npm install
+npm run dev
+```
+
+開発サーバーはRPCパスを `localhost:8080` へプロキシするため、CORSや接続先の設定は不要です。別ホストのAPIサーバーへ直接つなぐ場合のみ `VITE_API_URL=<サーバーURL> npm run dev` で指定し、serve側で `--allowed-origins <フロントのオリジン>` を許可してください。
+
+要件・設計は [doc/frontend-web-ui/prd.md](doc/frontend-web-ui/prd.md) を参照してください。
+
+## 開発
+
+開発環境は [devcontainer](.devcontainer/devcontainer.json) で再現できます(Go 1.26.4 / Node 22)。
+
+```sh
+# Go: テスト・カバレッジ・ビルド
 CGO_ENABLED=0 go test ./...
-
-# カバレッジ
 CGO_ENABLED=0 go test -coverprofile=coverage.out ./... && go tool cover -func=coverage.out
-
-# ビルド
 CGO_ENABLED=0 go build ./cmd/heic-converter
+
+# フロントエンド: テスト・lint・ビルド
+cd web && npm test && npm run lint && npm run build
+
+# protoからGo/TypeScript両方のコードを生成
+buf generate
 ```
 
 ### アーキテクチャ
@@ -166,6 +187,10 @@ internal/
   gen/                bufによる生成コード (connect-go)
   presentation/cli/   CLI (cobra + charmbracelet)
   presentation/api/   Webサーバー (connect-rpc)
+web/                  フロントエンド (Vite + React, atomic design)
+  src/gen/            bufによる生成コード (protoc-gen-es)
+  src/lib/ src/hooks/ RPC・ブラウザAPIの知識を隔離する層
+  src/components/     atoms / molecules / organisms / templates / pages
 ```
 
 HEICのデコードには [gen2brain/heic](https://github.com/gen2brain/heic)(デコーダをWASM化しpure Goランタイムで実行)を採用しており、これが「cgoなしの単一バイナリ」を実現しています。
