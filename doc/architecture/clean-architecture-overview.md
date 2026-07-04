@@ -244,21 +244,23 @@ sequenceDiagram
 ## 7. ディレクトリマップ
 
 ```
-cmd/heic-converter/     エントリポイント。DI(部品の結線)のみ
-proto/heic/v1/          APIスキーマ (protobuf)。bufで管理
-internal/
-  domain/
-    model/              Format・EncodeOptions・ConversionResultなどの値オブジェクト
-    port/               ImageDecoder / ImageEncoder / FileStorage インターフェース
-  usecase/              Converter (Convert / ConvertImage)。portにのみ依存
-  infra/
-    decoder/            port.ImageDecoder実装 (gen2brain/heic)
-    encoder/            port.ImageEncoder実装 ×6 + registry
-    storage/            port.FileStorage実装 (ローカルFS)
-  gen/                  bufによる生成コード (connect-go)。手で編集しない
-  presentation/
-    cli/                入力層1: cobra + charmbracelet (対話・TUI・serveサブコマンド)
-    api/                入力層2: connect-rpc (handler・interceptor・server)
+proto/heic/v1/            APIスキーマ (protobuf)。bufで管理(Go/TS共通の源泉)
+backend/                  Go本体 (モジュール: github.com/kkito0726/heic-converter/backend)
+  cmd/heic-converter/     エントリポイント。DI(部品の結線)のみ
+  internal/
+    domain/
+      model/              Format・EncodeOptions・ConversionResultなどの値オブジェクト
+      port/               ImageDecoder / ImageEncoder / FileStorage インターフェース
+    usecase/              Converter (Convert / ConvertImage)。portにのみ依存
+    infra/
+      decoder/            port.ImageDecoder実装 (gen2brain/heic)
+      encoder/            port.ImageEncoder実装 ×6 + registry
+      storage/            port.FileStorage実装 (ローカルFS)
+    gen/                  bufによる生成コード (connect-go)。手で編集しない
+    presentation/
+      cli/                入力層1: cobra + charmbracelet (対話・TUI・serveサブコマンド)
+      api/                入力層2: connect-rpc (handler・interceptor・server)
+web/                      フロントエンド (Vite + React)。src/gen/ にTSクライアントを生成
 ```
 
 ## 関連ドキュメント

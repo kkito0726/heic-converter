@@ -4,6 +4,8 @@ project_name: heic-converter
 
 builds:
   - main: ./cmd/heic-converter
+    # Goモジュールはbackend/配下にある
+    dir: backend
     env:
       - CGO_ENABLED=0
     goos:

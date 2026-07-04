@@ -1,8 +1,0 @@
-# APIイメージのビルドコンテキストから不要物を除外する
-.git
-.github
-.devcontainer
-doc
-web
-install.sh
-*.md

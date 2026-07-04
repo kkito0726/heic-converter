@@ -3,7 +3,7 @@
 services:
   # apiはホストへポート公開しない(webからコンテナ間ネットワーク経由でのみ到達)
   api:
-    build: .
+    build: backend
 
   web:
     build: web

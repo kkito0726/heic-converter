@@ -1,0 +1,4 @@
+# APIイメージのビルドコンテキスト(backend/)から不要物を除外する
+Dockerfile
+.dockerignore
+coverage*.out
