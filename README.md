@@ -156,6 +156,20 @@ npm run dev
 
 要件・設計は [doc/frontend-web-ui/prd.md](doc/frontend-web-ui/prd.md) を参照してください。
 
+### Docker Composeで起動
+
+GoもNodeもインストールせず、UI+APIをまとめてローカルで動かせます。
+
+```sh
+docker compose up --build
+```
+
+起動後 http://localhost:3000 を開くとWeb UIが使えます。
+
+- `web`(nginx)が静的ファイルを配信し、RPCパスを `api` コンテナへリバースプロキシします(同一オリジンのためCORS不要)
+- `api` はホストへポート公開していません(RPCも http://localhost:3000 に対して叩けます)
+- 変換画像はどのコンテナにも保存されません(ステートレス)
+
 ## 開発
 
 開発環境は [devcontainer](.devcontainer/devcontainer.json) で再現できます(Go 1.26.4 / Node 22)。
