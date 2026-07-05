@@ -119,7 +119,7 @@ function newEntry(file: File): FileEntry {
   const error = unsupported
     ? 'Not a HEIC/HEIF file'
     : tooLarge
-      ? 'Exceeds the 48 MB upload limit'
+      ? 'Exceeds the 60 MB upload limit'
       : undefined
   return {
     id: crypto.randomUUID(),
