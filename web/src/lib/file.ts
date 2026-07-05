@@ -1,8 +1,9 @@
 // ファイルサイズ・ファイル名まわりの純粋関数。
 
-// サーバーのリクエスト上限は64MiB。Connect JSONではbytesがbase64で約4/3倍に
-// 膨張するため、元ファイルの実効上限はその3/4とする(FR-1)。
-export const MAX_UPLOAD_BYTES = (64 * 1024 * 1024 * 3) / 4
+// サーバーのリクエスト上限は64MiB。protobufバイナリ(useBinaryFormat)では
+// base64のような膨張がないため、メッセージのオーバーヘッド分だけ余裕を
+// 残した60MiBを実効上限とする(FR-1)。
+export const MAX_UPLOAD_BYTES = 60 * 1024 * 1024
 
 export function isTooLarge(file: File): boolean {
   return file.size > MAX_UPLOAD_BYTES

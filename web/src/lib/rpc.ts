@@ -10,5 +10,13 @@ export type ConverterClient = Client<typeof ConvertService>
 // 開発時は VITE_API_URL でserveのアドレス(例: http://localhost:8080)を指定する。
 export function createConverterClient(baseUrl?: string): ConverterClient {
   const url = baseUrl ?? import.meta.env.VITE_API_URL ?? window.location.origin
-  return createClient(ConvertService, createConnectTransport({ baseUrl: url }))
+  return createClient(
+    ConvertService,
+    createConnectTransport({
+      baseUrl: url,
+      // protobufバイナリで送受信する。JSONだとbytesがbase64で約4/3倍に
+      // 膨張するため、画像の転送量を約25%削減できる
+      useBinaryFormat: true,
+    }),
+  )
 }
